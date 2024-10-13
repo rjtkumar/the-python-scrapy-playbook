@@ -1,0 +1,42 @@
+When you run the startproject command, you generate a template Scrapy project ready for you to build your scrapers with.
+    > scrapy startproject <project_name>
+    > scrapy startproject chocolatescraper
+
+To generate a scrapy spider from the templates available in scrapy:
+    > scrapy genspider <name_of_spider> <website>
+You can create this spider as standalone or from inside a scrapy project (for it to be a part of the scrapy project)
+
+This project should look like this.
+    <project_name>
+    ├── scrapy.cfg
+        └── myproject
+            ├── __init__.py
+            ├── items.py
+            ├── middlewares.py
+            ├── pipelines.py
+            ├── settings.py
+            └── spiders
+            └── __init__.py
+
+To oppen scrapy shell (where you can try and test CSS or XPath selectors for parsing/selecting data on the page)
+    > scrapy shell
+
+You can use ipython as your scrapy shell (provides better auto-completion and colorization)
+    Install ipython
+        > pip install ipython
+    Edit scrapy.cfg
+        ## scrapy.cfg
+            [settings]
+            default = chocolatescraper.settings
+            shell = ipython
+
+To run a spider "quotes"
+        > scrapy crawl quotes
+    To save the output data to a json file:
+        > scrapy crawl <spider_name> -o <output_file_name>.json
+        > scrapy crawl chocolatespider -o chocolates.json
+    To save the scraped data to a csv file:
+        > scrapy crawl <spider_name> -o <output_file_name>.csv
+        > scrapy crawl chocolatespider -o chocolates.csv
+    -o : append to the file if it exists/ create new file if it doesn't exists
+    -O : Ovevrwrites an existing file/ create new file if it doesn't exist
