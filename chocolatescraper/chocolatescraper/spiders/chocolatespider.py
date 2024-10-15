@@ -14,7 +14,6 @@ class ChocolatespiderSpider(scrapy.Spider):
         for product in products:
             chocolate = ChocolateProductLoader(
                 item=ChocolateProduct(), selector=product)
-            # chocolate.add_css(field_name, css_selector)
             chocolate.add_css('name', 'a.product-item-meta__title::text')
             chocolate.add_css(
                 'price',
