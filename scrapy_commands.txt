@@ -21,6 +21,9 @@ This project should look like this.
 To oppen scrapy shell (where you can try and test CSS or XPath selectors for parsing/selecting data on the page)
     > scrapy shell
 
+To get a list of all available spiders, move to the project directory,
+    project> scrapy list
+
 You can use ipython as your scrapy shell (provides better auto-completion and colorization)
     Install ipython
         > pip install ipython
