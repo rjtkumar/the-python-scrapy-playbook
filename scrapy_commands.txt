@@ -54,3 +54,6 @@ Saving to an Amazon S3 bucket:
 
 To connect to a mysql server, you need the python package
     > pip install mysql-connector-python
+
+To help connecting to a PostgreSQL DB with use the python package,
+    > pip install psycopg2
