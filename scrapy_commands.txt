@@ -43,3 +43,14 @@ To run a spider "quotes"
         > scrapy crawl chocolatespider -o chocolates.csv
     -o : append to the file if it exists/ create new file if it doesn't exists
     -O : Ovevrwrites an existing file/ create new file if it doesn't exist
+
+Saving to an Amazon S3 bucket:
+    First we need to install botocore, a python library created by amazon tohelp with connecting to S3
+        > pip3 install botocore
+    We can save tot S3 by specifying the URL to our bucket in the scrapy crawl command
+        > scrapy crawl chocolatespider -O s3://aws_key:aws_secret@mybucket/path/to/myscrapeddata.csv:csv
+    The file format can be csv, xml, json, jsonl
+    When storing with this method scrapy uses delayed file delivery, the file is first stored on-device and then uploaded to amazon
+
+To connect to a mysql server, you need the python package
+    > pip install mysql-connector-python

@@ -7,6 +7,8 @@
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
+import mysql.connector
+import chocolatescraper.config as config
 
 
 class GbpToUsdPipeline:
@@ -27,20 +29,59 @@ class GbpToUsdPipeline:
             adapter['price'] = floatPrice * self.gbpToUsdRate
 
             return item
-        
+
         else:
             # drop item if no price
             raise DropItem(f"Missing price in {item}")
 
 
 class DuplicatesPipeline:
-    def __init__ (self):
+    def __init__(self):
         self.names_seen = set()
 
-    def process_item (self, item, spider):
+    def process_item(self, item, spider):
         adapter = ItemAdapter(item)
         if adapter['name'] in self.names_seen:
             raise DropItem(f'Duplicate item found: {item!r}')
         else:
             self.names_seen.add(adapter['name'])
             return item
+
+
+class SaveToMySqlPipeline (object):
+
+    def __init__(self):
+        self.create_connection()
+
+    def create_connection(self):
+        # connecting to the mysql server
+        self.conn = mysql.connector.connect(
+            host= config.MYSQL_HOSTNAME,
+            user= config.MYSQL_USERNAME,
+            password= config.MYSQL_PASSWORD,
+            database='chocolate_products'
+        )
+        # we execute commands with the cursor
+        self.curr = self.conn.cursor()
+
+    def process_item(self, item, spider):
+        self.store_db(item)
+        # scrapy expects us to return the item
+        return item
+
+    def store_db(self, item):
+        # Saving the item to database
+        self.curr.execute(
+            """INSERT INTO chocolates (name, price, url) VALUES (%s, %s, %s)""",
+            (
+                item['name'],
+                item['price'],
+                item['url']
+            )
+        )
+        # commiting changes made
+        self.conn.commit()
+    
+    def __del__ (self):
+        # closing the connection to the mysql server
+        self.conn.close()

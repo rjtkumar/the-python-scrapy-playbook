@@ -69,6 +69,7 @@ ROBOTSTXT_OBEY = True
 ITEM_PIPELINES = {
     "chocolatescraper.pipelines.GbpToUsdPipeline": 100,
     "chocolatescraper.pipelines.DuplicatesPipeline": 200,
+    "chocolatescraper.pipelines.SaveToMySqlPipeline" : 300 # Adding SaveToMySqlPipeline at the end (highest int) because saving to db is the last step
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
