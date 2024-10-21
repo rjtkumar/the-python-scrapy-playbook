@@ -1,3 +1,5 @@
+from chocolatescraper.config import SCRAPEOPS_API_KEY
+
 # Scrapy settings for chocolatescraper project
 #
 # For simplicity, this file contains only settings considered important or
@@ -50,17 +52,25 @@ CONCURRENT_REQUESTS = 1 # Concurrent requests, also make sure this goes along wi
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
+# DOWNLOADER_MIDDLEWARES = {
+#    "chocolatescraper.middlewares.ChocolatescraperDownloaderMiddleware": None,
+#    # For each request to have random but legit user agents
+#    "scrapy_user_agents.middlewares.RandomUserAgentMiddleware": 400,
+# }
+
+# To enable scrapeops monitoring tool:
 DOWNLOADER_MIDDLEWARES = {
-   "chocolatescraper.middlewares.ChocolatescraperDownloaderMiddleware": None,
-   # For each request to have random but legit user agents
-   "scrapy_user_agents.middlewares.RandomUserAgentMiddleware": 400,
+    'scrapeops_scrapy.middleware.retry.RetryMiddleware' : 550,
+    'scrapy.downloadermiddlewares.retry.RetryMiddleware' : None
 }
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
-# EXTENSIONS = {
+EXTENSIONS = {
 #    "scrapy.extensions.telnet.TelnetConsole": None,
-# }
+    'scrapeops_scrapy.extension.ScrapeOpsMonitor' : 500
+    # Everytime we run our spider now, Scrapeops SDK will monitor the performance and send the data to our scrapeops dashboard 
+}
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html

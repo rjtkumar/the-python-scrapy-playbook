@@ -17,7 +17,7 @@ class ChocolatespiderSpider(scrapy.Spider):
     def start_requests(self):
         start_url = 'https://www.chocolate.co.uk/collections/all'
         yield scrapy.Request(
-            url = get_proxy_url(start_url),
+            url = start_url,
             callback= self.parse
         )
 
@@ -39,6 +39,6 @@ class ChocolatespiderSpider(scrapy.Spider):
         if next_page is not None:
             next_page_url = 'https://www.chocolate.co.uk' + next_page
             yield response.follow(
-                url= get_proxy_url(next_page_url),
+                url= next_page_url,
                 callback= self.parse
             )

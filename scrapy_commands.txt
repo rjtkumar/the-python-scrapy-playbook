@@ -60,3 +60,7 @@ To help connecting to a PostgreSQL DB with use the python package,
 
 For user agentn spoofing:
     > pip install scrapy-user-agents
+
+To monitor our scraper, ou may use scrapeops monitor
+    To install the scrapeops scrapy extension
+        > pip install scrapeops-scrapy
