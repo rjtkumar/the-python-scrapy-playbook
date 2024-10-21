@@ -9,7 +9,7 @@ from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
 import mysql.connector
 import chocolatescraper.config as config
-import psycopg2
+# import psycopg2
 
 
 class GbpToUsdPipeline:
@@ -87,46 +87,46 @@ class SaveToMySqlPipeline (object):
         # closing the connection to the mysql server
         self.conn.close()
 
-class SaveToPostgreSqlPipeline (object):
+# class SaveToPostgreSqlPipeline (object):
 
-    def __init__(self):
-        self.create_connection()
+#     def __init__(self):
+#         self.create_connection()
 
-    def create_connection(self):
-        # connecting to the PostgreSQL server
-        self.connection = psycopg2.connect(
-            host= config.POSTGRES_HOSTNAME,
-            user= config.POSTGRES_USERNAME,
-            password= config.POSTGRES_PASSWORD,
-            database='chocolate_products'
-        )
-        # we execute commands with the cursor
-        self.curr = self.connection.cursor()
-        # Creating the chocolates table if it does'nt already exist
-        self.curr.execute("""CREATE TABLE IF NOT EXISTS chocolates (id SERIAL PRIMARY KEY,name VARCHAR(255),price VARCHAR(255),url TEXT);""")
-        self.connection.commit()
+#     def create_connection(self):
+#         # connecting to the PostgreSQL server
+#         self.connection = psycopg2.connect(
+#             host= config.POSTGRES_HOSTNAME,
+#             user= config.POSTGRES_USERNAME,
+#             password= config.POSTGRES_PASSWORD,
+#             database='chocolate_products'
+#         )
+#         # we execute commands with the cursor
+#         self.curr = self.connection.cursor()
+#         # Creating the chocolates table if it does'nt already exist
+#         self.curr.execute("""CREATE TABLE IF NOT EXISTS chocolates (id SERIAL PRIMARY KEY,name VARCHAR(255),price VARCHAR(255),url TEXT);""")
+#         self.connection.commit()
 
-    def process_item(self, item, spider):
-        self.store_db(item)
-        # scrapy expects us to return the item
-        return item
+#     def process_item(self, item, spider):
+#         self.store_db(item)
+#         # scrapy expects us to return the item
+#         return item
 
-    def store_db(self, item):
-        # Saving the item to database
-        try:
-            self.curr.execute(
-                """INSERT INTO chocolates (name, price, url) VALUES (%s, %s, %s)""",
-                (
-                    item['name'],
-                    item['price'],
-                    item['url']
-                )
-            )
-        except BaseException as e:
-            print(e)
-        # commiting changes made
-        self.connection.commit()
+#     def store_db(self, item):
+#         # Saving the item to database
+#         try:
+#             self.curr.execute(
+#                 """INSERT INTO chocolates (name, price, url) VALUES (%s, %s, %s)""",
+#                 (
+#                     item['name'],
+#                     item['price'],
+#                     item['url']
+#                 )
+#             )
+#         except BaseException as e:
+#             print(e)
+#         # commiting changes made
+#         self.connection.commit()
     
-    def __del__ (self):
-        # closing the connection to the mysql server
-        self.connection.close()
+#     def __del__ (self):
+#         # closing the connection to the mysql server
+#         self.connection.close()

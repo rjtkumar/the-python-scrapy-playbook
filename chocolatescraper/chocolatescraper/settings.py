@@ -20,7 +20,7 @@ NEWSPIDER_MODULE = "chocolatescraper.spiders"
 ROBOTSTXT_OBEY = True
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-# CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 1 # Concurrent requests, also make sure this goes along with you proxy provider if you're using one
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
@@ -50,9 +50,11 @@ ROBOTSTXT_OBEY = True
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-# DOWNLOADER_MIDDLEWARES = {
-#    "chocolatescraper.middlewares.ChocolatescraperDownloaderMiddleware": 543,
-# }
+DOWNLOADER_MIDDLEWARES = {
+   "chocolatescraper.middlewares.ChocolatescraperDownloaderMiddleware": None,
+   # For each request to have random but legit user agents
+   "scrapy_user_agents.middlewares.RandomUserAgentMiddleware": 400,
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
@@ -70,7 +72,7 @@ ITEM_PIPELINES = {
     "chocolatescraper.pipelines.GbpToUsdPipeline": 100,
     "chocolatescraper.pipelines.DuplicatesPipeline": 200,
     # "chocolatescraper.pipelines.SaveToMySqlPipeline" : 300 # Adding SaveToMySqlPipeline at the end (highest int) because saving to db is the last step
-    "chocolatescraper.pipelines.SaveToPostgreSqlPipeline" : 300
+    # "chocolatescraper.pipelines.SaveToPostgreSqlPipeline" : 300
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
