@@ -27,7 +27,15 @@ CONCURRENT_REQUESTS = 1 # Concurrent requests, also make sure this goes along wi
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-# DOWNLOAD_DELAY = 3
+
+# Sets a download delay which is applied between requests to the same domain
+# applied to any spider if it doesn't have a custom download delay
+# By default, if a download delay is set, scrapy introduces randomness to it
+# Upper limit of the delay = 1.5* DOWLOAD_DELAY
+# Lower limit of the delay = 0.5* DOWLOAD_DELAY
+DOWNLOAD_DELAY = 3 # in seconds
+
+
 # The download delay setting will honor only one of:
 # CONCURRENT_REQUESTS_PER_DOMAIN = 16
 # CONCURRENT_REQUESTS_PER_IP = 16
