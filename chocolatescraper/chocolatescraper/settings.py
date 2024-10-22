@@ -30,13 +30,37 @@ CONCURRENT_REQUESTS = 1 # Concurrent requests, also make sure this goes along wi
 
 # Sets a download delay which is applied between requests to the same domain
 # applied to any spider if it doesn't have a custom download delay
-# By default, if a download delay is set, scrapy introduces randomness to it
-# Upper limit of the delay = 1.5* DOWLOAD_DELAY
-# Lower limit of the delay = 0.5* DOWLOAD_DELAY
-DOWNLOAD_DELAY = 3 # in seconds
+# # By default, if a download delay is set, scrapy introduces randomness to it
+# # Upper limit of the delay = 1.5* DOWLOAD_DELAY
+# # Lower limit of the delay = 0.5* DOWLOAD_DELAY
+# DOWNLOAD_DELAY = 3 # in seconds
 
-# To disable random download delay introduced by scrapy:
-RANDOMIZE_DOWNLOAD_DELAY = False
+# # To disable random download delay introduced by scrapy:
+# RANDOMIZE_DOWNLOAD_DELAY = False
+
+
+# Using scrapy's in-built auto-throttling extension
+# 1. Spiders start with a download delay of AUTOTHROTTLE_START_DELAY .
+# 2. When a response is received, the target download delay is calculated as latency / N where
+#    latency is the latency of the response, and N is AUTOTHROTTLE_TARGET_CONCURRENCY .
+# 3. The download delay for next requests is set to the average of previous download delay and the
+#    target download delay.
+# 4. Responses that return a non-200 response don't decrease the download delay.
+# 5. The download delay can’t become less than DOWNLOAD_DELAY or greater than
+#    AUTOTHROTTLE_MAX_DELAY .
+
+# AUTOTHROTTLE_START_DELAY : The initial download delay in seconds. Default: 5.0 seconds.
+# AUTOTHROTTLE_MAX_DELAY : The maximum download delay in seconds the spider will use. It won't increase the download delay above
+# this delay even when experiencing high latencies. Default: 60.0 seconds.
+# AUTOTHROTTLE_TARGET_CONCURRENCY : The target number of active requests the spider should be sending to the website at any point in time.
+# Default: 1 concurrent thread.
+# The lower the AUTOTHROTTLE_TARGET_CONCURRENCY the politer your scraper.
+# AUTOTHROTTLE_DEBUG : When AUTOTHROTTLE_DEBUG is enabled, Scrapy will display stats about every response so you can
+# monitor the download delays in real-time. Default: False .
+DOWNLOAD_DELAY = 2 # minimum delay when auto-throttling
+AUTOTHROTTLE_ENABLED = True # Enabling auto-throttle
+AUTOTHROTTLE_DEBUG = True
+
 
 
 # The download delay setting will honor only one of:
@@ -69,14 +93,14 @@ RANDOMIZE_DOWNLOAD_DELAY = False
 #    "scrapy_user_agents.middlewares.RandomUserAgentMiddleware": 400,
 # }
 
-# # To enable scrapeops monitoring tool:
+# To enable scrapeops monitoring tool:
 # DOWNLOADER_MIDDLEWARES = {
 #     'scrapeops_scrapy.middleware.retry.RetryMiddleware' : 550,
 #     'scrapy.downloadermiddlewares.retry.RetryMiddleware' : None
 # }
 
-# # Enable or disable extensions
-# # See https://docs.scrapy.org/en/latest/topics/extensions.html
+# Enable or disable extensions
+# See https://docs.scrapy.org/en/latest/topics/extensions.html
 # EXTENSIONS = {
 # #    "scrapy.extensions.telnet.TelnetConsole": None,
 #     'scrapeops_scrapy.extension.ScrapeOpsMonitor' : 500

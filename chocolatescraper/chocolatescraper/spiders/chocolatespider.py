@@ -14,14 +14,13 @@ def get_proxy_url (url):
 class ChocolatespiderSpider(scrapy.Spider):
     name = "chocolatespider"
 
+    # Auto-throttle uses a simple algogrithm to optimally adjust the download delays
+    # It adjusts to the website and backs-off when we encounter errors
+    # More options in mentioned settings.py
     custom_settings = {
-        # Use this is you're running your spider as a script with CrawlerProcess or
-        # You need different delays for individual spiders in a project
-        # By default, if a download delay is set, scrapy introduces randomness to it
-        # Upper limit of the delay = 1.5* DOWLOAD_DELAY
-        # Lower limit of the delay = 0.5* DOWLOAD_DELAY
-        'DOWNLOAD_DELAY' : 2, # Gives us a second download delay between requests to the same domain
-        'RANDOMIZE_DOWNLOAD_DELAY' : False
+        "DOWNLOAD_DELAY" : 5, # The minimum downlaod delay for auto-throttle
+        "AUTOTHROTTLE_ENABLED" : True  # Enabling auto-throttle
+
     }
 
     def start_requests(self):
