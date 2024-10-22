@@ -35,6 +35,9 @@ CONCURRENT_REQUESTS = 1 # Concurrent requests, also make sure this goes along wi
 # Lower limit of the delay = 0.5* DOWLOAD_DELAY
 DOWNLOAD_DELAY = 3 # in seconds
 
+# To disable random download delay introduced by scrapy:
+RANDOMIZE_DOWNLOAD_DELAY = False
+
 
 # The download delay setting will honor only one of:
 # CONCURRENT_REQUESTS_PER_DOMAIN = 16
@@ -66,19 +69,19 @@ DOWNLOAD_DELAY = 3 # in seconds
 #    "scrapy_user_agents.middlewares.RandomUserAgentMiddleware": 400,
 # }
 
-# To enable scrapeops monitoring tool:
-DOWNLOADER_MIDDLEWARES = {
-    'scrapeops_scrapy.middleware.retry.RetryMiddleware' : 550,
-    'scrapy.downloadermiddlewares.retry.RetryMiddleware' : None
-}
+# # To enable scrapeops monitoring tool:
+# DOWNLOADER_MIDDLEWARES = {
+#     'scrapeops_scrapy.middleware.retry.RetryMiddleware' : 550,
+#     'scrapy.downloadermiddlewares.retry.RetryMiddleware' : None
+# }
 
-# Enable or disable extensions
-# See https://docs.scrapy.org/en/latest/topics/extensions.html
-EXTENSIONS = {
-#    "scrapy.extensions.telnet.TelnetConsole": None,
-    'scrapeops_scrapy.extension.ScrapeOpsMonitor' : 500
-    # Everytime we run our spider now, Scrapeops SDK will monitor the performance and send the data to our scrapeops dashboard 
-}
+# # Enable or disable extensions
+# # See https://docs.scrapy.org/en/latest/topics/extensions.html
+# EXTENSIONS = {
+# #    "scrapy.extensions.telnet.TelnetConsole": None,
+#     'scrapeops_scrapy.extension.ScrapeOpsMonitor' : 500
+#     # Everytime we run our spider now, Scrapeops SDK will monitor the performance and send the data to our scrapeops dashboard 
+# }
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html

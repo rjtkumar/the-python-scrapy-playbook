@@ -20,7 +20,8 @@ class ChocolatespiderSpider(scrapy.Spider):
         # By default, if a download delay is set, scrapy introduces randomness to it
         # Upper limit of the delay = 1.5* DOWLOAD_DELAY
         # Lower limit of the delay = 0.5* DOWLOAD_DELAY
-        'DOWNLOAD_DELAY' : 2 # Gives us a second download delay between requests to the same domain
+        'DOWNLOAD_DELAY' : 2, # Gives us a second download delay between requests to the same domain
+        'RANDOMIZE_DOWNLOAD_DELAY' : False
     }
 
     def start_requests(self):
