@@ -14,13 +14,15 @@ def get_proxy_url (url):
 class ChocolatespiderSpider(scrapy.Spider):
     name = "chocolatespider"
 
-    # Auto-throttle uses a simple algogrithm to optimally adjust the download delays
-    # It adjusts to the website and backs-off when we encounter errors
-    # More options in mentioned settings.py
+    # Setting custom feed settings for this spider
     custom_settings = {
-        "DOWNLOAD_DELAY" : 5, # The minimum downlaod delay for auto-throttle
-        "AUTOTHROTTLE_ENABLED" : True  # Enabling auto-throttle
-
+        'FEEDS' : {
+            'data.csv' : {
+                'format' : 'csv',
+                'overwrite' : True # When saving locally by default 'overwrite' is False
+                # Refer FEEDS docs for more options
+            }
+        }
     }
 
     def start_requests(self):

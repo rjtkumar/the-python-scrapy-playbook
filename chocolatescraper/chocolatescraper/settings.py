@@ -14,6 +14,13 @@ BOT_NAME = "chocolatescraper"
 SPIDER_MODULES = ["chocolatescraper.spiders"]
 NEWSPIDER_MODULE = "chocolatescraper.spiders"
 
+# We can tell scrapy to save to a csv file using teh 'FEEDS' setting
+FEEDS = {
+    "data.csv" : {
+        'format' : 'csv',
+        'overwrite' : True # When saving locally by default 'overwrite' is False
+    }
+}
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = "chocolatescraper (+http://www.yourdomain.com)"
@@ -57,9 +64,9 @@ CONCURRENT_REQUESTS = 1 # Concurrent requests, also make sure this goes along wi
 # The lower the AUTOTHROTTLE_TARGET_CONCURRENCY the politer your scraper.
 # AUTOTHROTTLE_DEBUG : When AUTOTHROTTLE_DEBUG is enabled, Scrapy will display stats about every response so you can
 # monitor the download delays in real-time. Default: False .
-DOWNLOAD_DELAY = 2 # minimum delay when auto-throttling
-AUTOTHROTTLE_ENABLED = True # Enabling auto-throttle
-AUTOTHROTTLE_DEBUG = True
+# DOWNLOAD_DELAY = 2 # minimum delay when auto-throttling
+# AUTOTHROTTLE_ENABLED = True # Enabling auto-throttle
+# AUTOTHROTTLE_DEBUG = True
 
 
 

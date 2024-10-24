@@ -43,6 +43,8 @@ To run a spider "quotes"
         > scrapy crawl chocolatespider -o chocolates.csv
     -o : append to the file if it exists/ create new file if it doesn't exists
     -O : Ovevrwrites an existing file/ create new file if it doesn't exist
+    You can also save to absolute paths:
+        > scrapy crawl bookspider -o file:///path/to/my/project/bookspider_data.csv
 
 Saving to an Amazon S3 bucket:
     First we need to install botocore, a python library created by amazon tohelp with connecting to S3
