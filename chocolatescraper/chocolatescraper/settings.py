@@ -81,14 +81,23 @@ NEWSPIDER_MODULE = "chocolatescraper.spiders"
 #     },
 # }
 
-# Setting batch sizes and saving our data in batches to make it more manageable
-# Use atleast one of these placeholders in the file name: batch_id or batch_time
+# # Setting batch sizes and saving our data in batches to make it more manageable
+# # Use atleast one of these placeholders in the file name: batch_id or batch_time
+# FEEDS = {
+#     'data/%(name)s/%(name)s_batch_%(batch_id)s' : {
+#         'format' : 'csv',
+#         'batch_item_count' : 10
+#     }
+# } 
+
+# Saving to an amazon S3 bucket using FEEDS setting
 FEEDS = {
-    'data/%(name)s/%(name)s_batch_%(batch_id)s' : {
-        'format' : 'csv',
-        'batch_item_count' : 10
+    's3://scrapy-playbook/%(name)s/%(name)s_%(time)s.jsonl' : {
+        'format' : 'jsonlines'
     }
-} 
+}
+AWS_ACCESS_KEY_ID = "Your access key id"
+AWS_SECRET_ACCESS_KEY = "Your aws secret access key"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
