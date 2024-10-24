@@ -16,7 +16,10 @@ NEWSPIDER_MODULE = "chocolatescraper.spiders"
 
 # We can tell scrapy to save to a csv file using teh 'FEEDS' setting
 FEEDS = {
-    "data.csv" : {
+    'data/%(name)s/%(name)s_%(time)s.csv' : {
+    # telling scrapy to save our data to set a dynamic file path for our output file
+    # name is replaced by the spidername and time is replaced by the date and time of scraping
+    # Example: data/bookspider/bookspider_2022-05-18T07-47-03.csv
         'format' : 'csv',
         'overwrite' : True # When saving locally by default 'overwrite' is False
     }

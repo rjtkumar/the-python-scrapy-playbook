@@ -17,10 +17,14 @@ class ChocolatespiderSpider(scrapy.Spider):
     # Setting custom feed settings for this spider
     custom_settings = {
         'FEEDS' : {
-            'data.csv' : {
-                'format' : 'csv',
-                'overwrite' : True # When saving locally by default 'overwrite' is False
-                # Refer FEEDS docs for more options
+                'data/%(name)s/%(name)s_%(time)s.csv' : { 
+                # telling scrapy to save our data to set a dynamic file path for our output file
+                # name is replaced by the spidername and time is replaced by the date and time of scraping
+                # Example: data/bookspider/bookspider_2022-05-18T07-47-03.csv
+                # Any named parameter gets replaced with the spider attribute of the same name
+                    'format' : 'csv',
+                    'overwrite' : True # When saving locally by default 'overwrite' is False
+                    # Refer FEEDS docs for more options
             }
         }
     }
