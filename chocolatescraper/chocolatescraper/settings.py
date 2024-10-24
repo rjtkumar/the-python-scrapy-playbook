@@ -52,34 +52,44 @@ NEWSPIDER_MODULE = "chocolatescraper.spiders"
     # output files storing up to the specified number of items in each output file.
     # Docs
 
-# Example:
-{
-    'items.json': {
-        'format': 'json',
-        'encoding': 'utf8',
-        'store_empty': False,
-        'item_classes': [MyItemClass1, 'myproject.items.MyItemClass2'],
-        'fields': None,
-        'indent': 4,
-        'item_export_kwargs': {
-           'export_empty_fields': True,
-        },
-    },
-    '/home/user/documents/items.xml': {
-        'format': 'xml',
-        'fields': ['name', 'price'],
-        'item_filter': MyCustomFilter1,
-        'encoding': 'latin1',
-        'indent': 8,
-    },
-    pathlib.Path('items.csv.gz'): {
-        'format': 'csv',
-        'fields': ['price', 'name'],
-        'item_filter': 'myproject.filters.MyCustomFilter2',
-        'postprocessing': [MyPlugin1, 'scrapy.extensions.postprocessing.GzipPlugin'],
-        'gzip_compresslevel': 5,
-    },
-}
+# # Example:
+# {
+#     'items.json': {
+#         'format': 'json',
+#         'encoding': 'utf8',
+#         'store_empty': False,
+#         'item_classes': [MyItemClass1, 'myproject.items.MyItemClass2'],
+#         'fields': None,
+#         'indent': 4,
+#         'item_export_kwargs': {
+#            'export_empty_fields': True,
+#         },
+#     },
+#     '/home/user/documents/items.xml': {
+#         'format': 'xml',
+#         'fields': ['name', 'price'],
+#         'item_filter': MyCustomFilter1,
+#         'encoding': 'latin1',
+#         'indent': 8,
+#     },
+#     pathlib.Path('items.csv.gz'): {
+#         'format': 'csv',
+#         'fields': ['price', 'name'],
+#         'item_filter': 'myproject.filters.MyCustomFilter2',
+#         'postprocessing': [MyPlugin1, 'scrapy.extensions.postprocessing.GzipPlugin'],
+#         'gzip_compresslevel': 5,
+#     },
+# }
+
+# Setting batch sizes and saving our data in batches to make it more manageable
+# Use atleast one of these placeholders in the file name: batch_id or batch_time
+FEEDS = {
+    'data/%(name)s/%(name)s_batch_%(batch_id)s' : {
+        'format' : 'csv',
+        'batch_item_count' : 10
+    }
+} 
+
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = "chocolatescraper (+http://www.yourdomain.com)"
