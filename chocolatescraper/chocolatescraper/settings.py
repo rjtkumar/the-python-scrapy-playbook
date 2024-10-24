@@ -14,15 +14,71 @@ BOT_NAME = "chocolatescraper"
 SPIDER_MODULES = ["chocolatescraper.spiders"]
 NEWSPIDER_MODULE = "chocolatescraper.spiders"
 
-# We can tell scrapy to save to a csv file using teh 'FEEDS' setting
-FEEDS = {
-    'data/%(name)s/%(name)s_%(time)s.csv' : {
-    # telling scrapy to save our data to set a dynamic file path for our output file
-    # name is replaced by the spidername and time is replaced by the date and time of scraping
-    # Example: data/bookspider/bookspider_2022-05-18T07-47-03.csv
-        'format' : 'csv',
-        'overwrite' : True # When saving locally by default 'overwrite' is False
-    }
+# # We can tell scrapy to save to a csv file using teh 'FEEDS' setting
+# FEEDS = {
+#     'data/%(name)s/%(name)s_%(time)s.csv' : {
+#     # telling scrapy to save our data to set a dynamic file path for our output file
+#     # name is replaced by the spidername and time is replaced by the date and time of scraping
+#     # Example: data/bookspider/bookspider_2022-05-18T07-47-03.csv
+#         'format' : 'csv',
+#         'overwrite' : True # When saving locally by default 'overwrite' is False
+#     }
+# }
+
+# Other options available to us when defining our FEEDS
+# We can declare multiple output feeds
+# encoding:
+    # The encoding to be used for the feed. If unset or set to None (default) it uses
+    # UTF-8 for everything except JSON output, which uses safe numeric encoding
+    # (\uXXXX sequences) for historic reasons. 
+# fields
+    # A list of fields to export, allowing you to only save certain fields from your
+    # Items.
+# item_classes
+    # A list of item classes to export. If undefined or empty, all items are exported.
+# item_filter
+    # A filter class to filter items to export. ItemFilter is used be default.
+# indent
+    # Amount of spaces used to indent the output on each level.
+# store_empty
+    # Whether to export empty feeds (i.e. feeds with no items).
+# uri_params
+    # A string with the import path of a function to set the parameters to apply with
+    # printf-style string formatting to the feed URI.
+# postprocessing
+    # List of plugins to use for post-processing.
+# batch_item_count
+    # If assigned an integer number higher than 0, Scrapy generates multiple
+    # output files storing up to the specified number of items in each output file.
+    # Docs
+
+# Example:
+{
+    'items.json': {
+        'format': 'json',
+        'encoding': 'utf8',
+        'store_empty': False,
+        'item_classes': [MyItemClass1, 'myproject.items.MyItemClass2'],
+        'fields': None,
+        'indent': 4,
+        'item_export_kwargs': {
+           'export_empty_fields': True,
+        },
+    },
+    '/home/user/documents/items.xml': {
+        'format': 'xml',
+        'fields': ['name', 'price'],
+        'item_filter': MyCustomFilter1,
+        'encoding': 'latin1',
+        'indent': 8,
+    },
+    pathlib.Path('items.csv.gz'): {
+        'format': 'csv',
+        'fields': ['price', 'name'],
+        'item_filter': 'myproject.filters.MyCustomFilter2',
+        'postprocessing': [MyPlugin1, 'scrapy.extensions.postprocessing.GzipPlugin'],
+        'gzip_compresslevel': 5,
+    },
 }
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
