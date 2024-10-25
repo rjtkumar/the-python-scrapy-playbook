@@ -15,6 +15,19 @@ SPIDER_MODULES = ["chocolatescraper.spiders"]
 NEWSPIDER_MODULE = "chocolatescraper.spiders"
 
 
+# For the middleware defined we now need to set some variables (proxy information)
+PROXY_USER = 'username'
+PROXY_PASSWORD = 'password'
+PROXY_ENDPOINT = 'proxy.proxyprovider.com'
+PROXY_PORT = '8000'
+# Telling scrapy to use our proxy middleware
+DOWNLOADER_MIDDLEWARES = {
+    'myproject.middlewares.MyProxyMiddleware': 350,
+    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 400,
+    # For this middleware to work correctly, it needs to be put before the HttpProxyMiddleware
+}
+
+
 # Using proxies from a list of proxy IPs we have
 # Install 'scrapy-rotating-proxies' with pip
 

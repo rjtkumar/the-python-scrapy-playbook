@@ -19,11 +19,6 @@ class ChocolatespiderSpider(scrapy.Spider):
         yield scrapy.Request(
             url = start_url,
             callback= self.parse,
-            # If given only a proxy end point
-            # Is handled by scrapy's HttpProxyMiddleware (enabled by default)
-            meta = {
-                'proxy' : 'https://proxy.com:8010'
-            } 
         )
 
     def parse(self, response):
