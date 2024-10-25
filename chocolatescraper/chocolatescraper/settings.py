@@ -14,22 +14,24 @@ BOT_NAME = "chocolatescraper"
 SPIDER_MODULES = ["chocolatescraper.spiders"]
 NEWSPIDER_MODULE = "chocolatescraper.spiders"
 
+
 # Using proxies from a list of proxy IPs we have
 # Install 'scrapy-rotating-proxies' with pip
 
-# Insert you proxy list
-ROTATING_PROXY_LIST = [
-    'proxy1.com:8000',
-    'proxy2.com:8031',
-    'proxy3.com:8032'
-]
-# If your proxy IPs are stored in a file, you may give the path to the file instead
-ROTATING_PROXY_LIST_PATH = '/path/to/my_proxies.txt'
-# Add downloader middlewares from scrapy-rotating-proxies
-DOWNLOADER_MIDDLEWARES = {
-    'rotating_proxies.middlewares.RotatingProxyMiddleware' : 610,
-    'rotating_proxies.middlewares.BanDetectionMiddleware' : 620
-}
+# # Insert you proxy list
+# ROTATING_PROXY_LIST = [
+#     'proxy1.com:8000',
+#     'proxy2.com:8031',
+#     'proxy3.com:8032'
+# ]
+# # If your proxy IPs are stored in a file, you may give the path to the file instead
+# ROTATING_PROXY_LIST_PATH = '/path/to/my_proxies.txt'
+# # Add downloader middlewares from scrapy-rotating-proxies
+# DOWNLOADER_MIDDLEWARES = {
+#     'rotating_proxies.middlewares.RotatingProxyMiddleware' : 610,
+#     'rotating_proxies.middlewares.BanDetectionMiddleware' : 620
+# }
+
 
 # # We can tell scrapy to save to a csv file using teh 'FEEDS' setting
 # FEEDS = {
