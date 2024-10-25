@@ -5,7 +5,7 @@ from urllib.parse import urlencode
 from chocolatescraper.config import SCRAPEOPS_API_KEY
 
 def get_proxy_url (url):
-    # Takes target website url are input and returns the proxy url
+    # This is how to use proxy API's endpoint. The API handles everything for us
     payload = {'api_key': SCRAPEOPS_API_KEY, 'url': url}
     proxy_url = 'https://proxy.scrapeops.io/v1/?' + urlencode(payload)
     return proxy_url
