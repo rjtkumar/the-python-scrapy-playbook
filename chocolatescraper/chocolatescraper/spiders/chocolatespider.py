@@ -19,6 +19,10 @@ class ChocolatespiderSpider(scrapy.Spider):
         yield scrapy.Request(
             url = start_url,
             callback= self.parse,
+            # We can also set up the user-agent in the scrapy Request object
+            headers = {
+                'User-Agent' : 'Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0'
+            }
         )
 
     def parse(self, response):
@@ -40,5 +44,9 @@ class ChocolatespiderSpider(scrapy.Spider):
             next_page_url = 'https://www.chocolate.co.uk' + next_page
             yield response.follow(
                 url= next_page_url,
-                callback= self.parse
+                callback= self.parse,
+                headers = {
+                    # Setting up a static user agent for the request being made
+                    'User-Agent' : 'Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0'
+                }
             )

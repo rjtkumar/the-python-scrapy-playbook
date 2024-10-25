@@ -14,6 +14,12 @@ BOT_NAME = "chocolatescraper"
 SPIDER_MODULES = ["chocolatescraper.spiders"]
 NEWSPIDER_MODULE = "chocolatescraper.spiders"
 
+# USER AGENTS
+# The default user-agent scrapy sends is : 'Scrapy/VERSION (+https://scrapy.org)'
+# To over ride the above default
+# Setting a static user agent to override the scrapy default
+USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0'
+
 
 # # For the middleware defined we now need to set some variables (proxy information)
 # PROXY_USER = 'username'
@@ -134,6 +140,8 @@ NEWSPIDER_MODULE = "chocolatescraper.spiders"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = "chocolatescraper (+http://www.yourdomain.com)"
+
+
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
