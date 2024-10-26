@@ -7,27 +7,88 @@ from scrapy import signals
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
+import requests
+from random import randint
+from urllib.parse import urlencode
 
-# Making our own middleware to Process a request and add the proxy details (IPs, user ids, passwords, etc)
-import base64
-class MyProxyMiddleware(object):
-    
+# Fake user-agent downloader middleware
+
+
+class ScrapeOpsFakeUserAgentMiddleware:
+
     @classmethod
     def from_crawler(cls, crawler):
         return cls(crawler.settings)
-    
+
     def __init__(self, settings):
-        self.user = settings.get('PROXY_USER')
-        self.password = settings.get('PROXY_PASSWORD')
-        self.endpoint = settings.get('PROXY_ENDPOINT')
-        self.port = settings.get('PROXY_PORT')
-    
+        # Initializing the middlware object
+        # Getting relevant details from settings.py
+        self.scrapeops_api_key = settings.get('SCRAPEOPS_API_KEY')
+        self.scrapeops_endpoint = settings.get(
+            'SCRAPEOPS_FAKE_USER_AGENT_ENDPOINT',
+            'http://headers.scrapeops.io/v1/user-agents?')
+        self.scrapeops_fake_user_agents_active = settings.get(
+            'SCRAPEOPS_FAKE_USER_AGENT_ENABLED', False)
+        self.scrapeops_num_results = settings.get('SCRAPEOPS_NUM_RESULTS')
+        # Checking if any crucial detail is missing or user doesn't want to use
+        # the fake user agent API
+        self._scrapeops_fake_user_agents_enabled()
+        # checking if the user wants to use the scrapeops fake user-agent API
+        # or not
+        if self.scrapeops_fake_user_agents_active:
+            # Retrieve teh fake user-agent list
+            self._get_user_agent_list()
+
+    def _get_user_agent_list(self):
+        payload = {
+            'api_key': self.scrapeops_api_key
+        }
+        if self.scrapeops_num_results is not None:
+            payload['num_results'] = self.scrapeops_num_results
+        response = requests.get(
+            self.scrapeops_endpoint,
+            params=urlencode(payload)
+        )
+        json_response = response.json()
+        self.user_agent_list = json_response.get('result', [])
+
+    def _get_random_user_agent(self):
+        random_index = randint(0, len(self.user_agent_list) - 1)
+        return self.user_agent_list[random_index]
+
+    def _scrapeops_fake_user_agents_enabled(self):
+        if self.scrapeops_api_key is None or self.scrapeops_api_key == '' or self.scrapeops_fake_user_agents_active == False:
+            self.scrapeops_fake_user_agents_active = False
+        else:
+            self.scrapeops_fake_user_agents_active = True
+
     def process_request(self, request, spider):
-        user_credentials = '{user}:{passw}'.format(user=self.user, passw=self.password)
-        basic_authentication = 'Basic ' + base64.b64encode(user_credentials.encode()).decode()
-        host = 'http://{endpoint}:{port}'.format(endpoint=self.endpoint, port=self.port)
-        request.meta['proxy'] = host
-        request.headers['Proxy-Authorization'] = basic_authentication
+        if self.scrapeops_fake_user_agents_active:
+            random_user_agent = self._get_random_user_agent()
+            request.headers['User-Agent'] = random_user_agent
+        return None
+
+
+# # Making our own middleware to Process a request and add the proxy details (IPs, user ids, passwords, etc)
+# import base64
+# class MyProxyMiddleware(object):
+
+#     @classmethod
+#     def from_crawler(cls, crawler):
+#         return cls(crawler.settings)
+
+#     def __init__(self, settings):
+#         self.user = settings.get('PROXY_USER')
+#         self.password = settings.get('PROXY_PASSWORD')
+#         self.endpoint = settings.get('PROXY_ENDPOINT')
+#         self.port = settings.get('PROXY_PORT')
+
+#     def process_request(self, request, spider):
+#         user_credentials = '{user}:{passw}'.format(user=self.user, passw=self.password)
+#         basic_authentication = 'Basic ' + base64.b64encode(user_credentials.encode()).decode()
+#         host = 'http://{endpoint}:{port}'.format(endpoint=self.endpoint, port=self.port)
+#         request.meta['proxy'] = host
+#         request.headers['Proxy-Authorization'] = basic_authentication
 
 class ChocolatescraperSpiderMiddleware:
     # Not all methods need to be defined. If a method is not defined,

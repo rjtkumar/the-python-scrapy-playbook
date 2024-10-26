@@ -28,10 +28,6 @@ class ChocolatespiderSpider(scrapy.Spider):
         yield scrapy.Request(
             url = start_url,
             callback= self.parse,
-            # We can also set up the user-agent in the scrapy Request object
-            headers = {
-                "User-Agent" : random.choice(user_agent_list) # Choosing a random user agent to make the request with
-            }
         )
 
     def parse(self, response):
@@ -54,7 +50,4 @@ class ChocolatespiderSpider(scrapy.Spider):
             yield response.follow(
                 url= next_page_url,
                 callback= self.parse,
-                headers = {
-                    "User-Agent" : random.choice(user_agent_list) # Choosing a random user agent to make the request with
-                }
             )
