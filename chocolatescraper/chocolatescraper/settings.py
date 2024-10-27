@@ -14,18 +14,27 @@ BOT_NAME = "chocolatescraper"
 SPIDER_MODULES = ["chocolatescraper.spiders"]
 NEWSPIDER_MODULE = "chocolatescraper.spiders"
 
+
+# Settings for scrapy-playwright
+TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
+DOWNLOAD_HANDLERS = {
+    "http": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+    "https": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+}
+
+
 # USER AGENTS
 # The default user-agent scrapy sends is : 'Scrapy/VERSION (+https://scrapy.org)'
 # To over ride the above default
 # Setting a static user agent to override the scrapy default
 # USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0'
 
-# Using the scrapeops fake user-agent middleware through a downloader middleware in middlewares.py we 
-# wrote ourselves
-SCRAPEOPS_FAKE_USER_AGENT_ENABLED = True
-DOWNLOADER_MIDDLEWARES = {
-    'chocolatescraper.middlewares.ScrapeOpsFakeUserAgentMiddleware' : 400
-}
+# # Using the scrapeops fake user-agent middleware through a downloader middleware in middlewares.py we 
+# # wrote ourselves
+# SCRAPEOPS_FAKE_USER_AGENT_ENABLED = True
+# DOWNLOADER_MIDDLEWARES = {
+#     'chocolatescraper.middlewares.ScrapeOpsFakeUserAgentMiddleware' : 400
+# }
 
 
 # # For the middleware defined we now need to set some variables (proxy information)
@@ -245,12 +254,12 @@ CONCURRENT_REQUESTS = 1 # Concurrent requests, also make sure this goes along wi
 # Telling scrapy to use pipelines we defined in pipelines.py
 # The integer values assigned determine the order of execution
 # Lower is run first, customary to use numbers between 0 - 1000
-ITEM_PIPELINES = {
-    "chocolatescraper.pipelines.GbpToUsdPipeline": 100,
-    "chocolatescraper.pipelines.DuplicatesPipeline": 200,
-    # "chocolatescraper.pipelines.SaveToMySqlPipeline" : 300 # Adding SaveToMySqlPipeline at the end (highest int) because saving to db is the last step
-    # "chocolatescraper.pipelines.SaveToPostgreSqlPipeline" : 300
-}
+# ITEM_PIPELINES = {
+#     "chocolatescraper.pipelines.GbpToUsdPipeline": 100,
+#     "chocolatescraper.pipelines.DuplicatesPipeline": 200,
+#     # "chocolatescraper.pipelines.SaveToMySqlPipeline" : 300 # Adding SaveToMySqlPipeline at the end (highest int) because saving to db is the last step
+#     # "chocolatescraper.pipelines.SaveToPostgreSqlPipeline" : 300
+# }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

@@ -66,3 +66,8 @@ For user agentn spoofing:
 To monitor our scraper, ou may use scrapeops monitor
     To install the scrapeops scrapy extension
         > pip install scrapeops-scrapy
+
+Installing scrapy-playwright
+    > pip install scrapy-playwright
+Installing playwright (and browsers)
+    > playwright install
