@@ -1,23 +1,30 @@
 import scrapy
 from chocolatescraper.items import QuoteItem
 from scrapy_playwright.page import PageMethod
-
+from chocolatescraper.config import SCRAPEOPS_API_KEY
 
 class QuotesSpider(scrapy.Spider):
     name = "quotes"
+
+    custom_settings = {
+        'PLAYWRIGHT_LAUNCH_OPTIONS' : {
+            'proxy' : {
+                "server" : 'http://proxy.scrapeops.io:5353',
+                'username' : 'scrapeops',
+                'password' : str(SCRAPEOPS_API_KEY)
+            }
+        }
+    }
 
     def start_requests(self):
         url = 'https://quotes.toscrape.com/scroll' # Now scrolling the infinite scroll version of the website
         # We need to explicitly tell scrapy to use playwright for each request
         yield scrapy.Request(url, meta = {
             'playwright' : True,
-            # To be able to use the methods (PageMethods) provivded to us by scrapy-playwright
             'playwright_include_page' : True,
-            # When using 'playwirght_include_page' set to True, it is also recommended to  provide an errback to clode the page
-            'errback' : self.errback,
-            'playwright_page_methods' : [
-                PageMethod('wait_for_selector', 'div.quote'),
-            ]
+            'playwright_context_kwargs' : {
+                'ignore_https_errors' : True
+            }
         })
     
     async def parse(self, response):
