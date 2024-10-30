@@ -15,12 +15,24 @@ SPIDER_MODULES = ["chocolatescraper.spiders"]
 NEWSPIDER_MODULE = "chocolatescraper.spiders"
 
 
-# Settings for scrapy-playwright
-TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
-DOWNLOAD_HANDLERS = {
-    "http": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
-    "https": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+# Monitoring spiders with spidermon
+## Enable spidermon
+SPIDERMON_ENABLED = True
+
+## Adding spidermon to scrapy extensions
+EXTENSIONS = {
+    'spidermon.contrib.scrapy.extensions.Spidermon' : 500
 }
+
+SPIDERMON_SPIDER_CLOSE_MONITORS = ('chocolatescraper.monitors.SpiderCloseMonitorSuite')
+
+
+# # Settings for scrapy-playwright
+# TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
+# DOWNLOAD_HANDLERS = {
+#     "http": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+#     "https": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+# }
 
 
 # USER AGENTS

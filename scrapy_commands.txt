@@ -71,3 +71,6 @@ Installing scrapy-playwright
     > pip install scrapy-playwright
 Installing playwright (and browsers)
     > playwright install
+
+spidermon is a package for monitoring scrapy spiders
+    > pip install spidermon
