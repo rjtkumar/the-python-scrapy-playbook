@@ -18,3 +18,5 @@ class ItemCountMonitor (Monitor):
 
 class SpiderCloseMonitorSuite (MonitorSuite):
     monitors = [ItemCountMonitor, ]
+    monitor_finished_actions = [] # Actions to take when suite finishes it's execution
+    monitors_failed_actions = [] # Actions to take when a suite finishes it's execution with a failed monitor

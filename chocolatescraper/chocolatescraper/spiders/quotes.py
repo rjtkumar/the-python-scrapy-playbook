@@ -8,6 +8,18 @@ class QuotesSpider(scrapy.Spider):
 
     start_urls = ['https://quotes.toscrape.com']
 
+    custom_settings = {
+        
+        "ITEM_PIPELINES" : {
+            'spidermon.contrib.scrapy.pipelines.ItemValidationPipeline' : 800
+        },
+
+        "SPIDERMON_VALIDATION_SCHEMAS" : [
+            "./chocolatescraper/quote_item_validator.json",
+        ]
+
+    }
+
     def parse (self, response):
         quotes= response.css('div.quote')
         for quote in quotes:

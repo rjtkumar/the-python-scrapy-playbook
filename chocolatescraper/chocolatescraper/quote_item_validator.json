@@ -1,0 +1,20 @@
+{
+    "type" : "object",
+    "properties" : {
+        "text": {
+            "type" : "string"
+        },
+        "author" : {
+            "type" : "string"
+        },
+        "tags" : {
+            "type": "array",
+            "items": {
+                "type" : "string"
+            }
+        }
+    },
+    "required" : [
+        "text", "author", "tags"
+    ]
+}
