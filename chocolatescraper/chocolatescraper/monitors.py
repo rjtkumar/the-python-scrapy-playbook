@@ -16,7 +16,28 @@ class ItemCountMonitor (Monitor):
             item_extracted >= minimum_threshold, msg= msg
         )
 
+
+@monitors.name('Item validation')
+class ItemValidationMonitor (Monitor):
+    @monitors.name('No item vavlidation errors')
+    def test_no_item_vavlidation_errors (self):
+        validation_errors = getattr(
+            'self.stats',
+            'spidermon/validation/fields/errors',
+            0
+        )
+        self.assertEqual(
+            validation_errors,
+            0,
+            msg = 'Found validation errors in fields {}'.format(validation_errors)
+        )
+
+
 class SpiderCloseMonitorSuite (MonitorSuite):
-    monitors = [ItemCountMonitor, ]
+    monitors = [ItemCountMonitor, ItemValidationMonitor]
     monitor_finished_actions = [] # Actions to take when suite finishes it's execution
     monitors_failed_actions = [] # Actions to take when a suite finishes it's execution with a failed monitor
+
+# Definning a periodic montior
+class PeriodicMonitorSuite (MonitorSuite):
+    monitors = [ItemValidationMonitor,  ]

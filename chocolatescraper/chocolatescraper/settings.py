@@ -15,16 +15,16 @@ SPIDER_MODULES = ["chocolatescraper.spiders"]
 NEWSPIDER_MODULE = "chocolatescraper.spiders"
 
 
-# Monitoring spiders with spidermon
-## Enable spidermon
-SPIDERMON_ENABLED = True
+# # Monitoring spiders with spidermon
+# ## Enable spidermon
+# SPIDERMON_ENABLED = True
 
-## Adding spidermon to scrapy extensions
-EXTENSIONS = {
-    'spidermon.contrib.scrapy.extensions.Spidermon' : 500
-}
+# ## Adding spidermon to scrapy extensions
+# EXTENSIONS = {
+#     'spidermon.contrib.scrapy.extensions.Spidermon' : 500
+# }
 
-SPIDERMON_SPIDER_CLOSE_MONITORS = ('chocolatescraper.monitors.SpiderCloseMonitorSuite')
+# SPIDERMON_SPIDER_CLOSE_MONITORS = ('chocolatescraper.monitors.SpiderCloseMonitorSuite')
 
 
 # # Settings for scrapy-playwright

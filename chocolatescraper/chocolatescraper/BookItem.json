@@ -1,0 +1,16 @@
+{
+    "type" : "object",
+    "properties" : {
+        "url": {
+            "type": "string",
+            "format": "uri-reference"
+        },
+        "title": {
+            "type": "string" 
+        },
+        "price": {
+            "type": "string"
+        }
+    },
+    "required": ["url", "title", "price"]
+}
