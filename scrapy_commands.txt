@@ -74,3 +74,96 @@ Installing playwright (and browsers)
 
 spidermon is a package for monitoring scrapy spiders
     > pip install spidermon
+
+To install scrapyd which helps us run/access our spiders remotely through http and json api
+    > pip install scrapyd
+To run the scrapyd server locally:
+    > scrapyd
+If run locally, the http endpoint/ web page for scrapyd is available at
+    http://127.0.0.1:6800
+To be able to deploy your spider, you need to eggify it. A helper library to accomplish that is:
+    > pip install git+https://github.com/scrapy/scrapyd-client
+
+To deploy your spider:
+    -Run the scrapyd server locally
+    
+    - Open scrapy.cfg of your project
+        ## scrapy.cfg
+            [settings]
+            default = chocolatescraper.settings
+            shell = ipython
+
+            [deploy]
+            url = http://localhost:6800/ # uncomment this line
+            project = chocolatescraper
+    
+    - While the scrapyd server is running locally, execute the following command:
+        > scrapyd-deploy default
+    
+    - Output shown confirms correct deployment:
+        Packing version 1730926942
+        Deploying to project "chocolatescraper" in http://localhost:6800/addversion.json
+        Server response (200):
+        {"project": "chocolatescraper", "version": "1730926942", "spiders": 3, "status": "ok", "node_name": "rk-pc"}
+    
+    - To deploy to other endpoints configure scrapy.cfg as shown
+        ## scrapy.cfg
+            [settings]
+            default = demo.settings
+
+            [deploy:local]
+            url = http://localhost:6800/
+            project = demo
+
+            [deploy:production]
+            url = <IP Address>
+            project = demo
+    - After defining multiple endpoints in scrapy.cfg, deploy the project locally or to production using the shown commands
+        > scrapyd-deploy local
+            or
+        > scrapyd-deploy production
+    - You can also deploy a specific project using a specific project name
+        > scrapyd-deploy <target> -p <project>
+
+To control the scrapyd servevr (schedule, run, cancel, etc, ) jobs on our scrapyd servevr we can use the JSON API it provides
+the API supports GET, POST and HTTP requests
+    $ curl http://localhost:6800/daemonstatus.json
+    {"pending": 0, "running": 0, "finished": 0, "status": "ok", "node_name": "rk-pc"}
+    $ curl http://localhost:6800/listversions.json?project=chocolatescraper
+    {"versions": ["1730926942"], "status": "ok", "node_name": "rk-pc"}
+    $ curl http://localhost:6800/listspiders.json?project=chocolatescraper
+    {"spiders": ["books", "chocolatespider", "quotes"], "status": "ok", "node_name": "rk-pc"}
+View docs for more options
+
+Also available is a python library which enables us to make these requests through python code/REPL
+    > pip install python-scrapyd-api
+Using this api to interact with the scrapyd daemon
+        >>> from scrapyd_api import ScrapydAPI
+        >>> scrapyd = ScrapydAPI('http://localhost:6800')
+        >>> scrapyd.list_projects()
+        ['chocolatescraper']
+        >>> scrapyd.list_spiders("chocolatescraper")
+        ['books', 'chocolatespider', 'quotes']
+    Scheduling a crawl
+        >>> scrapyd.schedule(
+        ...     project = "chocolatescraper",
+        ...     spider = "quotes"
+        ... )
+        '6e9086519c8811efb4a8509a4cbd586a' # Returns to us a job ID
+    Checking the status of a job
+        >>> scrapyd.job_status("chocolatescraper", "6e9086519c8811efb4a8509a4cbd586a")
+        'finished'
+    We can also pass custom settings using the JOSN API or the python-scrapyd-api
+        >>> settings = {'DOWNLOAD_DELAY': 2}
+        >>> scrapyd.schedule('project_name', 'spider_name', settings=settings)
+        u'25b6588ef67333e38a0e080027880de7'
+    Cancelling jobs
+        >>> scrapyd.cancel('project_name', '14a6599ef67111e38a0e080027880ca6')
+        # Returns the "previous state" of the job before it was cancelled: 'running' or
+        'pending'.
+        'running'
+    Checking the status of a job
+        >>> scrapyd.job_status('project_name', '14a6599ef67111e38a0e080027880ca6')
+        # Returns 'running', 'pending', 'finished' or '' for unknown state.
+        'finished'
+    

@@ -70,6 +70,7 @@ instance/
 
 # output folder
 data/
+dbs/
 
 # Scrapy stuff:
 .scrapy
