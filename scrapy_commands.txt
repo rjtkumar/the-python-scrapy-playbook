@@ -167,3 +167,26 @@ Using this api to interact with the scrapyd daemon
         # Returns 'running', 'pending', 'finished' or '' for unknown state.
         'finished'
     
+ScrapydWeb is a admin dashboard designed to interact with scrapyd daemons.
+    To install scrapydweb:
+        > pip install --upgrade git+https://github.com/my8100/scrapydweb.git
+    To run scrapydweb:
+        > scrapydweb
+        This will launch a scrapydweb server on http://127.0.0.1:5000
+
+Logparser : As of now we cacn only schedule/run jobs via scrapydweb but not see any stats for our job
+logparser allows us to see stats for our jobs in our dashboards
+Run logparser in teh same directory as the scrapyd server and it will automatically parse our logs and make them available in the scrapydweb dashboard
+    > pip install logparser
+To run logparser:
+    > logparser
+    This will start a daemon that will automatically parse our logs for scrapydweb to consume
+If running scrapyd and scrapydweb on the same machine, open scrapydweb_settings_v10.py and set:
+    LOCAL_SCRAPYD_LOGS_DIR = True
+    ENABLE_LOGPARSER = True
+To add new servevrs to scrapydweb, open scrapydweb settings and set:
+    SCRAPYD_SERVERS = [
+        '127.0.0.1:6800', # scrapyd server endpoint
+        "username:password@localhost:6801#group", # giving server info through string,
+        tuple('username', 'password', 'localhost', '6801', 'group') # givivng scrapyd endpoint information through a tuple
+    ]

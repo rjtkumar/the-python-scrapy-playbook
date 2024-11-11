@@ -74,6 +74,7 @@ dbs/
 
 # Scrapy stuff:
 .scrapy
+logs
 
 # Sphinx documentation
 docs/_build/
