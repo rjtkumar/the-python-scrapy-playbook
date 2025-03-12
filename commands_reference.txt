@@ -1,0 +1,31 @@
+Virtual environment:
+    Setup a python virtual environment
+        > python3 -m venv venv
+    Activate the python virtual environment
+        > source venv/bin/activate
+    Installing scrapy in the virtual environment
+        > pip install scrapy
+
+Creating a scrapy project:
+    > scrapy startproject <project_name>
+To create a generic spider:
+    > scrapy genspider <spider_name> <website>
+    > scrapy genspider chocolate https://www.chocolate.co.uk
+To open scrapy shell:
+    > scrapy shell
+To set ipython as the default shell for scrapy shell update scrapy.cfg as shown:
+    ## scrapy.cfg
+    [settings]
+    default = ...
+    shell = ipython
+To print a list of all spiders in the current project:
+    > scrapy list
+To run a spider:
+    > scrapy crawl <spider_name>
+Options while saving output to a file:
+    -O: Overwrite any existing file
+    -o: Append to any existing file or create new
+To save the output to a json file:
+    > scrapy crawl <spider_name> -O <output_file.json>
+To save the output to a csv file:
+    > scrapy crawl <spider_name> -O <output_file.csv>

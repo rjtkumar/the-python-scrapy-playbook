@@ -1,0 +1,92 @@
+# IPython log file
+
+fetch("https://www.chocolate.co.uk/collections/all")
+response
+#[Out]# <200 https://www.chocolate.co.uk/collections/all>
+type(response)
+#[Out]# scrapy.http.response.html.HtmlResponse
+response.css("product-item")
+#[Out]# [<Selector query='descendant-or-self::product-item' data='<product-item class="product-item pro...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item pro...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>]
+products = response.css("product-item")
+products
+#[Out]# [<Selector query='descendant-or-self::product-item' data='<product-item class="product-item pro...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item pro...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>,
+#[Out]#  <Selector query='descendant-or-self::product-item' data='<product-item class="product-item " r...'>]
+type(products)
+#[Out]# scrapy.selector.unified.SelectorList
+response.css("product-item").get()
+#[Out]# '<product-item class="product-item product-item--sold-out" reveal><div class="product-item__image-wrapper "><div class="product-item__label-list label-list"><span class="label label--subdued">Sold out</span></div><a href="/products/2-5kg-bulk-of-our-41-milk-hot-chocolate-drops" class="product-item__aspect-ratio aspect-ratio aspect-ratio--square" style="padding-bottom: 107.33944954128441%; --aspect-ratio: 0.9316239316239316">\n      <img class="product-item__primary-image" loading="lazy" data-media-id="6054417104939" sizes="(max-width: 740px) calc(50vw - 24px), calc((min(100vw - 80px, 1520px) - 305px) / 4 - 18px)" height="702" width="654" alt="2.5kg Bulk 41% Milk Hot Chocolate Drops" src="//www.chocolate.co.uk/cdn/shop/products/hotchoc_654x.jpg?v=1597917174" srcset="//www.chocolate.co.uk/cdn/shop/products/hotchoc_200x.jpg?v=1597917174 200w, //www.chocolate.co.uk/cdn/shop/products/hotchoc_300x.jpg?v=1597917174 300w, //www.chocolate.co.uk/cdn/shop/products/hotchoc_400x.jpg?v=1597917174 400w, //www.chocolate.co.uk/cdn/shop/products/hotchoc_500x.jpg?v=1597917174 500w, //www.chocolate.co.uk/cdn/shop/products/hotchoc_600x.jpg?v=1597917174 600w, //www.chocolate.co.uk/cdn/shop/products/hotchoc_654x.jpg?v=1597917174 654w"></a></div>\n\n  <div class="product-item__info  ">\n    <div class="product-item-meta"><a href="/products/2-5kg-bulk-of-our-41-milk-hot-chocolate-drops" class="product-item-meta__title">2.5kg Bulk 41% Milk Hot Chocolate Drops</a>\n\n      <div class="product-item-meta__price-list-container">\n        <div class="price-list price-list--centered"><span class="price">\n              <span class="visually-hidden">Sale price</span>£50.00</span></div>\n      </div></div></div>\n</product-item>'
+type(response.css("product-item").get())
+#[Out]# str
+product = products[0]
+type(product)
+#[Out]# scrapy.selector.unified.Selector
+product
+#[Out]# <Selector query='descendant-or-self::product-item' data='<product-item class="product-item pro...'>
+product.css("a.product-item-meta__title").get()
+#[Out]# '<a href="/products/2-5kg-bulk-of-our-41-milk-hot-chocolate-drops" class="product-item-meta__title">2.5kg Bulk 41% Milk Hot Chocolate Drops</a>'
+product.css("a.product-item-meta__title::text").get()
+#[Out]# '2.5kg Bulk 41% Milk Hot Chocolate Drops'
+product.css("span.price").get()
+#[Out]# '<span class="price">\n              <span class="visually-hidden">Sale price</span>£50.00</span>'
+product.css("span.price::text").get()
+#[Out]# '\n              '
+product.css("span.price::text").getall()
+#[Out]# ['\n              ', '£50.00']
+product.css("span.price::text").getall()[-1]
+#[Out]# '£50.00'
+product.css("a.product-item-meta__title::attr(href)").get()
+#[Out]# '/products/2-5kg-bulk-of-our-41-milk-hot-chocolate-drops'
+product.css("a.product-item-meta__title").attrib['href']
+#[Out]# '/products/2-5kg-bulk-of-our-41-milk-hot-chocolate-drops'
+response.css('a[rel="next"]')
+#[Out]# [<Selector query="descendant-or-self::a[@rel = 'next']" data='<a class="pagination__nav-item" rel="...'>]
+response.css('a[rel="next"]').get()
+#[Out]# '<a class="pagination__nav-item" rel="next" aria-label="Next" data-page="2" href="/collections/all?page=2"><svg focusable="false" width="17" height="14" class="icon icon--nav-arrow-right  icon--direction-aware " viewbox="0 0 17 14">\n        <path d="M0 7h15M9 1l6 6-6 6" stroke="currentColor" stroke-width="1.7" fill="none"></path>\n      </svg></a>'
+response.css('a[rel="next"]::attr(href)').get()
+#[Out]# '/collections/all?page=2'
+exit()
