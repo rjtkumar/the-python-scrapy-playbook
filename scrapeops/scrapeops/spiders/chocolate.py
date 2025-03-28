@@ -1,6 +1,8 @@
 import scrapy
 from scrapeops.items import ChocolateProduct
 from scrapeops.itemloaders import ChocolateProductLoader
+from scrapeops.secrets import MYSQL_PASSWORD, MYSQL_DATABASE, MYSQL_HOST, MYSQL_USER
+
 
 class ChocolateSpider(scrapy.Spider):
     name = "chocolate" # spider name
@@ -12,8 +14,13 @@ class ChocolateSpider(scrapy.Spider):
     custom_settings = {
         'ITEM_PIPELINES': { 
             'scrapeops.pipelines.PriceToUsdPipeline': 100,      # Activating our own custom item pipelines for data processing and validation
-            'scrapeops.pipelines.RemoveDuplicatePipeline' : 200 # These pipelines hahev been defined inside pipelines.py
-        }
+            'scrapeops.pipelines.RemoveDuplicatePipeline' : 200, # These pipelines hahev been defined inside pipelines.py
+            # 'scrapeops.pipelines.SaveToMySqlPipeline': 300,
+        },
+        'mysql_host' : MYSQL_HOST,
+        'mysql_password' : MYSQL_PASSWORD,
+        'mysql_user' : MYSQL_USER,
+        'mysql_database' : MYSQL_DATABASE,
     }
 
     def parse(self, response):
@@ -35,12 +42,11 @@ class ChocolateSpider(scrapy.Spider):
             chocolate.add_css('url', 'a.product-item-meta__title::attr(href)')
             chocolate.add_css('price', 'span.price::text')
             yield chocolate.load_item()
-
         
-        # Navigating to the next page if it exists
-        next_page = response.css('a[rel="next"]::attr(href)').get()
-        if next_page is not None:
-            next_page_url = 'https://www.chocolate.co.uk' + next_page
-            yield response.follow(
-                next_page_url, callback = self.parse
-            )
+        # # Navigating to the next page if it exists
+        # next_page = response.css('a[rel="next"]::attr(href)').get()
+        # if next_page is not None:
+        #     next_page_url = 'https://www.chocolate.co.uk' + next_page
+        #     yield response.follow(
+        #         next_page_url, callback = self.parse
+        #     )

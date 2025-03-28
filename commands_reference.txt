@@ -23,9 +23,32 @@ To print a list of all spiders in the current project:
 To run a spider:
     > scrapy crawl <spider_name>
 Options while saving output to a file:
-    -O: Overwrite any existing file
+    -O: Overwrite any existing file or create new
     -o: Append to any existing file or create new
 To save the output to a json file:
-    > scrapy crawl <spider_name> -O <output_file.json>
+    Relative path:
+        > scrapy crawl <spider_name> -O <output_file.json>
+    Absolute path:
+        > scrapy crawl <spider_name> -O <file:///home/.../output_file.json:json>
 To save the output to a csv file:
-    > scrapy crawl <spider_name> -O <output_file.csv>
+    Relative path:
+        > scrapy crawl <spider_name> -O <output_file.csv>
+    Absolute path:
+        > scrapy crawl <spider_name> -O <file:///home/.../output_file.csv:csv>
+    
+Saving to an Amazon S3 bubcket:
+    Need to have botocore installed to be able to connect to theh S3 bubcket
+        > pip install botocore
+    Now that we have botocore installed we can save to S3:
+        > scrapy crawl <spider_name> -O s3://aws_key:aws_secret@my_bucket/path/to/scraped_data.csv:csv
+    We can also store the AWS ke and secret in the project settings:
+        AWS_ACCESS_KEY_ID= <aws_key>
+        AWS_SECRET_ACCESS_KEY= <aws-secret>
+    The AWS feed exporter uses delayed file delivery, first the file is temporarily saved locally and then uploaded oncec the spider has completed the job
+
+Saving to a mysql database:
+    To connect our python script to the mysql database we'll use the library "mysql-connector-python"
+        > pip install mysql-connector-python
+Saving to a Postgres datbase:
+    To connect to a postgres database we use the library 'psycopg2'
+        > pip install psycopg2

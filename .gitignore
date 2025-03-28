@@ -1,6 +1,7 @@
-# output directory
+# My additions
 scrapy_output/
 sandbox.py
+secrets.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

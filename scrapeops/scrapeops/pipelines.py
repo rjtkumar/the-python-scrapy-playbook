@@ -6,6 +6,7 @@
 
 from itemadapter import ItemAdapter # useful for handling different item types with a single interface
 from scrapy.exceptions import DropItem
+import mysql.connector
 
 # Once an item has been scraped it is sent to the item pipeline for processing and validation
 # Each item pipeline is a python class that implements a simple method called "process_item"
@@ -29,7 +30,9 @@ class PriceToUsdPipeline:
 
 
 class RemoveDuplicatePipeline:
+
     product_names_seen = set()
+    
     def process_item (self, item, spider):
         adapter = ItemAdapter(item)
         if adapter.get('name'):
@@ -40,3 +43,37 @@ class RemoveDuplicatePipeline:
                 raise DropItem(f'Duplicate item "{adapter['name']}"')
         else:
             raise DropItem(f'The item does not have a name: {adapter}')
+        
+
+class SaveToMySqlPipeline:
+
+    def open_spider (self,spider):
+        self.create_connection(spider)
+
+    def create_connection (self, spider):
+        self.connection = mysql.connector.connect(
+            user = spider.settings['mysql_user'],
+            host = spider.settings['mysql_host'],
+            password = spider.settings['mysql_password'],
+            database = spider.settings['mysql_database'],
+        )
+        self.curr = self.connection.cursor()
+    
+    def process_item (self, item, spider):
+        self.store_db(item)
+        # If everything goes well, scrapy expects us to return the item
+        return item
+
+    def store_db (self, item):
+        self.curr.execute(
+            """INSERT INTO chocolate_products (name, price, url) VALUES (%s,%s,%s)""",
+            (
+                item['name'],
+                item['price'],
+                item['url']
+            )
+        )
+        self.connection.commit()
+    
+    def close_spider (self, spider):
+        self.connection.close()
