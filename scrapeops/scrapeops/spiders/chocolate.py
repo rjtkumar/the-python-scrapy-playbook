@@ -1,13 +1,33 @@
 import scrapy
 from scrapeops.items import ChocolateProduct
 from scrapeops.itemloaders import ChocolateProductLoader
-from scrapeops.secrets import MYSQL_PASSWORD, MYSQL_DATABASE, MYSQL_HOST, MYSQL_USER
+from urllib.parse import urlencode
+from scrapeops.secrets import MYSQL_PASSWORD, MYSQL_DATABASE, MYSQL_HOST, MYSQL_USER, SCRAPEOPS_API_KEY
 
+def get_proxy_url (url):
+    # creates the proxy url from the target url
+    payload = {
+        'api_key' : SCRAPEOPS_API_KEY, 'url' : url
+    }
+    proxy_url = 'https://proxy.scrapeops.io/v1/?' + urlencode(payload)
+    return proxy_url
 
 class ChocolateSpider(scrapy.Spider):
     name = "chocolate" # spider name
-    allowed_domains = ["www.chocolate.co.uk"] # Tells scrapy to only ever scrape webpages of these domains
-    start_urls = ["https://www.chocolate.co.uk/collections/all"] # Tells scrapy the list of first urls it should scrape with the parse method
+    # allowed_domains = ["www.chocolate.co.uk"] # Tells scrapy to only ever scrape webpages of these domains
+    
+    # Since we're now using a proxy server to make Requests, where our spider makes request to the proxy which would make the request on our behalf
+    # We need to remove or alter the allowed domains list to let the requests to ouru proxy pass through
+    allowed_domains = ['proxy.scrapeops.io']
+    
+    # start_urls = ["https://www.chocolate.co.uk/collections/all"] # Tells scrapy the list of first urls it should scrape with the parse method
+
+    def start_requests(self):
+        start_url = 'https://www.chocolate.co.uk/collections/all'
+        yield scrapy.Request(
+            url = get_proxy_url(start_url), # Making the request via the proxy url, the proxy server would make the request on our behalf
+            callback = self.parse
+        )
 
     # These settings can be defined in the settings.py file or in the spider as below
     # in-spider settings precedence over settings in settings.py
@@ -15,12 +35,20 @@ class ChocolateSpider(scrapy.Spider):
         'ITEM_PIPELINES': { 
             'scrapeops.pipelines.PriceToUsdPipeline': 100,      # Activating our own custom item pipelines for data processing and validation
             'scrapeops.pipelines.RemoveDuplicatePipeline' : 200, # These pipelines hahev been defined inside pipelines.py
-            # 'scrapeops.pipelines.SaveToMySqlPipeline': 300,
+            # 'scrapeops.pipelines.SaveToMySqlPipeline': 300, # Custom pipeline to save data to our MySql db
         },
+        # Adding spider specific MySQL DB credentials which our pipeline will make use of
         'mysql_host' : MYSQL_HOST,
         'mysql_password' : MYSQL_PASSWORD,
         'mysql_user' : MYSQL_USER,
         'mysql_database' : MYSQL_DATABASE,
+
+        'DOWNLOADER_MIDDLEWARES' : {
+            'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware' : None, # Disabling the default user-agent middleware
+            'scrapy_user_agents.middlewares.RandomUserAgentMiddleware' : 400, # Sends rotating user-agents with our http requests
+        },
+        'CONCURRENT_REQUESTS' : 1, # Limit / Govern the number of parallel requests the spider is allowed to make, in this case the proxy
+        # only allows for one request to be executed at any given time
     }
 
     def parse(self, response):
@@ -43,10 +71,11 @@ class ChocolateSpider(scrapy.Spider):
             chocolate.add_css('price', 'span.price::text')
             yield chocolate.load_item()
         
-        # # Navigating to the next page if it exists
-        # next_page = response.css('a[rel="next"]::attr(href)').get()
-        # if next_page is not None:
-        #     next_page_url = 'https://www.chocolate.co.uk' + next_page
-        #     yield response.follow(
-        #         next_page_url, callback = self.parse
-        #     )
+        # Navigating to the next page if it exists
+        next_page = response.css('a[rel="next"]::attr(href)').get()
+        if next_page is not None:
+            next_page_url = 'https://www.chocolate.co.uk' + next_page
+            yield response.follow(
+                url= get_proxy_url(next_page_url), # Constructing the proxy URL out of the regular URL
+                callback = self.parse
+            )

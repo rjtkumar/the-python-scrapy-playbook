@@ -22,6 +22,7 @@ To print a list of all spiders in the current project:
     > scrapy list
 To run a spider:
     > scrapy crawl <spider_name>
+
 Options while saving output to a file:
     -O: Overwrite any existing file or create new
     -o: Append to any existing file or create new
@@ -52,3 +53,11 @@ Saving to a mysql database:
 Saving to a Postgres datbase:
     To connect to a postgres database we use the library 'psycopg2'
         > pip install psycopg2
+
+Scrapy library for rotating user-agents;
+        > pip install scrapy-user-agents
+    Enabling the library in settings.py
+        DOWNLOADER_MIDDLEWARES = {
+            "scrapy.downloadermiddlewares.useragent.UserAgentMiddleware" : None ,# Disable the default user agent middleware
+            "scrap_user_agents.middlewares.RandomUserAgentMiddleware" : 400
+        }
