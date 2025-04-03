@@ -61,3 +61,6 @@ Scrapy library for rotating user-agents;
             "scrapy.downloadermiddlewares.useragent.UserAgentMiddleware" : None ,# Disable the default user agent middleware
             "scrap_user_agents.middlewares.RandomUserAgentMiddleware" : 400
         }
+
+To create a requirements.txt file:
+    > pip freeze requirements.txt > <filename.txt>

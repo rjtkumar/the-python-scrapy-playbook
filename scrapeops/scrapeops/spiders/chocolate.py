@@ -42,13 +42,21 @@ class ChocolateSpider(scrapy.Spider):
         'mysql_password' : MYSQL_PASSWORD,
         'mysql_user' : MYSQL_USER,
         'mysql_database' : MYSQL_DATABASE,
-
+        'SCRAPEOPS_API_KEY' : SCRAPEOPS_API_KEY,
         'DOWNLOADER_MIDDLEWARES' : {
             'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware' : None, # Disabling the default user-agent middleware
             'scrapy_user_agents.middlewares.RandomUserAgentMiddleware' : 400, # Sends rotating user-agents with our http requests
+            'scrapeops_scrapy.middleware.retry.RetryMiddleware' : 550, # Enabling scrapeops monitoring dashboard - replacicng the retry middleware
+            'scrapy.downloadermiddlewares.retry.RetryMiddleware' : None, # Disabling the defalut retry middleware
         },
-        'CONCURRENT_REQUESTS' : 1, # Limit / Govern the number of parallel requests the spider is allowed to make, in this case the proxy
-        # only allows for one request to be executed at any given time
+        'CONCURRENT_REQUESTS' : 1,  # Limit / Govern the number of parallel requests the spider is allowed to make, in this case the proxy
+                                    # only allows for one request to be executed at any given time
+
+        'EXTENSIONS' : {
+            'scrapeops_scrapy.extension.ScrapeOpsMonitor' : 500, # Enabling scrapeops monitoring dashboard, accessible at scrapeops.io
+            # This monitor will give us numerous data points about how our scraping process went
+
+        }
     }
 
     def parse(self, response):
