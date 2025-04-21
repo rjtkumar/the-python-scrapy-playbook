@@ -64,3 +64,6 @@ Scrapy library for rotating user-agents;
 
 To create a requirements.txt file:
     > pip freeze requirements.txt > <filename.txt>
+
+Install the ML autopager
+    > pip install autopager
