@@ -1,6 +1,6 @@
 import scrapy
 from scrapy.exceptions import CloseSpider
-
+from scrapeops.items import QuoteItem
 
 class QuotesSpider(scrapy.Spider):
     name = "quotes"
@@ -9,12 +9,13 @@ class QuotesSpider(scrapy.Spider):
 
     def parse(self, response):
 
+        # Dictionaries, dataclasses and attrs objects are converted to scrapy.Item automatically upon yielding
+        quote_item = QuoteItem()
         for quote in response.css('div.quote'):
-            yield {
-                'author' : quote.css('small.author::text').get(),
-                'quote' : quote.css('span.text::text').get(),
-                'tags' : quote.css('a.tag::text').getall(),
-            }
+            quote_item['text'] = quote.css('span.text::text').get()
+            quote_item['author'] = quote.css('small.author::text').get()
+            quote_item['tags'] = quote.css('div.tags > a.tag::text').getall()
+            yield quote_item
 
         # Find the link to the next page in the next page button
         next_page =  response.css('li.next > a::attr(href)').get()

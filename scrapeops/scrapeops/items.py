@@ -13,3 +13,9 @@ class ChocolateProduct(scrapy.Item):
     name = scrapy.Field()
     url = scrapy.Field()
     price = scrapy.Field()
+
+
+class QuoteItem (scrapy.Item):
+    text = scrapy.Field()
+    tags = scrapy.Field()
+    author = scrapy.Field()
