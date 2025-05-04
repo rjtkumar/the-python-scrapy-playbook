@@ -15,6 +15,9 @@ NEWSPIDER_MODULE = "scrapeops.spiders"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "scrapeops (+http://www.yourdomain.com)"
+# # Default scrapy User-Agent identifies us as a scraper and may result in a block
+# # Change User-Agegnt in settings.py for project-wide application of teh same
+# USER_AGENT = 'Mozilla/5.0 (Linux; Android 15; SM-S931B Build/AP3A.240905.015.A2; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/127.0.6533.103 Mobile Safari/537.36'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True

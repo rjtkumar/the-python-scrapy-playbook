@@ -55,7 +55,9 @@ class ChocolateSpider(scrapy.Spider):
         'EXTENSIONS' : {
             # 'scrapeops_scrapy.extension.ScrapeOpsMonitor' : 500, # Enabling scrapeops monitoring dashboard, accessible at scrapeops.io
             # This monitor will give us numerous data points about how our scraping process went
-        }
+        },
+        # Setting a static user agent directly in settings, can also be done in settings.py for project wide application
+        'USER_AGENT' : 'Mozilla/5.0 (Linux; Android 15; SM-S931B Build/AP3A.240905.015.A2; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/127.0.6533.103 Mobile Safari/537.36'
     }
 
     def parse(self, response):
@@ -84,5 +86,9 @@ class ChocolateSpider(scrapy.Spider):
             next_page_url = 'https://www.chocolate.co.uk' + next_page
             yield response.follow(
                 url= get_proxy_url(next_page_url), # Constructing the proxy URL out of the regular URL
-                callback = self.parse
+                callback = self.parse,
+                headers = {
+                    # Setting a static user agent while making the request
+                    'User-Agent' : 'Mozilla/5.0 (Linux; Android 15; SM-S931B Build/AP3A.240905.015.A2; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/127.0.6533.103 Mobile Safari/537.36'
+                }
             )
