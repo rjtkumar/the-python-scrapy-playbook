@@ -2,33 +2,48 @@ import scrapy
 from scrapy.exceptions import CloseSpider
 from scrapeops.items import QuoteItem
 import random
+from scrapeops.secrets import SCRAPEOPS_API_KEY
 
-user_agent_list = [ # User-Agent list for us to choose randomly from
-'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36',
-'Mozilla/5.0 (iPhone; CPU iPhone OS 14_4_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1',
-'Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1)',
-'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36 Edg/87.0.664.75',
-'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18363',
-]
+# user_agent_list = [ # User-Agent list for us to choose randomly from
+# 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36',
+# 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_4_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1',
+# 'Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1)',
+# 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36 Edg/87.0.664.75',
+# 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18363',
+# ]
 
 class QuotesSpider(scrapy.Spider):
     name = "quotes"
     allowed_domains = ["quotes.toscrape.com"]
 
+    custom_settings = {
+        # # for scrapeops.middlewares.RandomUserAgentMiddleware
+        # 'DOWNLOADER_MIDDLEWARES' : {
+        #     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware' : 350,
+        #     'scrapeops.middlewares.RandomUserAgentMiddleware' : 400,
+        # },
+        'SCRAPEOPS_API_KEY' : SCRAPEOPS_API_KEY,
+        # for scrapeops.middlewares.ScrapeOpsFakeUserAgentMiddleware 
+        'SCRAPEOPS_FAKE_USER_AGENT_ENABLED' : True,
+        'DOWNLOADER_MIDDLEWARES' : {
+            'scrapeops.middlewares.ScrapeOpsFakeUserAgentMiddleware': 400,
+        }
+    }
+
     def start_requests(self):
         yield scrapy.Request(
             url= 'https://quotes.toscrape.com',
             callback= self.parse,
-            # Sending a random User-Agent with every request made 
-            headers= {
-                'User-Agent' : random.choice(user_agent_list)
-            }
+            # # Sending a random User-Agent with every request made 
+            # headers= {
+            #     'User-Agent' : random.choice(user_agent_list)
+            # }
         )
 
     def parse(self, response):
 
         # Dictionaries, dataclasses and attrs objects are converted to scrapy.Item automatically upon yielding
-        print(response.request.headers)
+        # print(response.request.headers) # For checking User-Agent
         quote_item = QuoteItem()
         for quote in response.css('div.quote'):
             quote_item['text'] = quote.css('span.text::text').get()
@@ -43,7 +58,7 @@ class QuotesSpider(scrapy.Spider):
             yield response.follow(
                 url= next_page,
                 callback = self.parse,
-                headers = { # Sending random User-Agent with every request made
-                    'User-Agent' : random.choice(user_agent_list)
-                }
+                # headers = { # Sending random User-Agent with every request made
+                #     'User-Agent' : random.choice(user_agent_list)
+                # }
             )
