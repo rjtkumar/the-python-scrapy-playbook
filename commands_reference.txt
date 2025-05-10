@@ -70,3 +70,15 @@ Install the ML autopager
 
 A library to handle rotating proxies:
     > pip install scrapy-rotating-proxies
+
+Saving scraped data to file:
+-o : Appends new data to existing file
+-O : Overwrites existing file
+    JSON and JSON Lines
+        Via command line arguments:
+            JSON: 
+                > scrapy crawl <spider_name> -o <filename.json> 
+            JSON Lines:
+                > scrapy crawl <spider_name> -o <filename.jsonl>
+        JSON doesn't support stream mode parsing, The entire data is stored in memory and saved at the end of the crawl which can cause memory leaks.
+        To overcome this we may use JOSN-lines which allows for incremental parsing.
