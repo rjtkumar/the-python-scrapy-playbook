@@ -7,6 +7,8 @@
 from itemadapter import ItemAdapter # useful for handling different item types with a single interface
 from scrapy.exceptions import DropItem
 import mysql.connector
+import sqlite3
+import pdb
 
 # Once an item has been scraped it is sent to the item pipeline for processing and validation
 # Each item pipeline is a python class that implements a simple method called "process_item"
@@ -77,3 +79,44 @@ class SaveToMySqlPipeline:
     
     def close_spider (self, spider):
         self.connection.close()
+
+
+class SqlLitePipeline:
+    def __init__ (self,):
+        self.seen = set()
+
+        # Create a connection to the database
+        self.con = sqlite3.connect('quotes.db')
+
+        # Create a cursor, used to execute commands
+        self.cur = self.con.cursor()
+
+        # Create a table if it doesn't exist already
+        self.cur.execute('CREATE TABLE IF NOT EXISTS quotes (text ,author ,tags)')
+
+    def process_item (self, item, spider):
+
+        if not item.get('text'):
+            raise DropItem(f'Quote has no text: {item['text']}')
+        # Check if same item has been scraped in this session already 
+        elif item['text'] in self.seen:
+            raise DropItem(f'Quote already processed: {item['text']}')
+        # Check if same item exists in the database already
+        else:
+            self.cur.execute('SELECT * FROM quotes WHERE text = ?', (item['text'],))
+            result = self.cur.fetchone()
+            if result:
+                raise DropItem(f'Quote already exists in the database: {item['text']}')
+
+        # Keeping a set of all items seen
+        self.seen.add(item['text'])
+
+        # Defining the INSERT statement
+        self.cur.execute("INSERT INTO quotes VALUES (?, ?, ?)", (item['text'], item['author'], str(item['tags']), ))
+        # commit() executes the INSERT command
+        self.con.commit() # SqlLite upon cur.execute() implicitly opens up a transaction which needs to be commited
+
+        return item
+
+    def __close__(self):
+        self.con.close()
