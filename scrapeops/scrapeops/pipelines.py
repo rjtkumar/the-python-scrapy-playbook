@@ -8,7 +8,7 @@ from itemadapter import ItemAdapter # useful for handling different item types w
 from scrapy.exceptions import DropItem
 import mysql.connector
 import sqlite3
-import pdb
+from mysql.connector import errorcode
 
 # Once an item has been scraped it is sent to the item pipeline for processing and validation
 # Each item pipeline is a python class that implements a simple method called "process_item"
@@ -120,3 +120,96 @@ class SqlLitePipeline:
 
     def __close__(self):
         self.con.close()
+    
+
+
+class MySqlDemoPipeline:
+
+    def open_spider (self, spider):
+        self.create_connection(spider)
+    
+    def create_connection (self, spider):
+        self.cnx = mysql.connector.connect(
+            user= spider.settings['MYSQL_USERNAME'],
+            password= spider.settings['MYSQL_PASSWORD'],
+            host= spider.settings['MYSQL_HOST'],
+            database= spider.settings['MYSQL_DATABASE'],
+            )
+        self.cur = self.cnx.cursor()
+        self.cur.execute("""CREATE TABLE IF NOT EXISTS quotes (text TEXT, author VARCHAR(100), tags TEXT)""")
+
+
+    def process_item (self, item, spider):
+        insert_query = "INSERT INTO quotes (text, author ,tags) VALUES (%(text)s, %(author)s, %(tags)s)"
+        if item.get('text') and item.get('author') and item.get('tags'):
+            self.cur.execute(
+                insert_query,
+                dict(
+                    text = item['text'],
+                    author = item['author'],
+                    tags = str(item['tags'])
+                    )
+                )
+            self.cnx.commit()
+        return item
+
+    def close_spider(self, spider):
+        self.cur.close()
+        self.cnx.close()
+
+class MySqlNoDuplicatesPipeline:
+
+    def open_spider (self, spider):
+        self.create_connection(spider.settings)
+    
+    def create_connection(self, settings):
+        try:
+            self.cnx = mysql.connector.connect(
+                user= settings['MYSQL_USERNAME'],
+                password = settings['MYSQL_PASSWORD'],
+                host = settings['MYSQL_HOST'],
+                database= settings['MYSQL_DATABASE']
+                )
+        except mysql.connector.Error as err:
+            if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+                print("Something is wrong with your user name or password")
+            elif err.errno == errorcode.ER_BAD_DB_ERROR:
+                print("Database does not exist")
+            else:
+                print(err)
+        self.cur = self.cnx.cursor()
+        self.cur.execute("""CREATE TABLE IF NOT EXISTS quotes2 (
+                         id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                         text TEXT NOT NULL,
+                         author varchar(255) NOT NULL,
+                         tags TEXT
+                         )""")
+
+    def check_duplicate (self, item) -> bool:
+        # checking if the item already exists in the DB
+        query = "SELECT * FROM quotes2 WHERE text = %s"
+        self.cur.execute(query,(item['text'],))
+        if self.cur.fetchall(): return True
+        else: return False
+
+    def process_item (self, item, spider):
+
+        # Drop item if has already been scraped
+        if self.check_duplicate(item):
+            raise DropItem(f"Item already exists")
+        
+        query = "INSERT INTO quotes2 (text, author, tags) VALUES (%(text)s, %(author)s, %(tags)s)"
+        self.cur.execute(
+            query,
+            dict(
+                text = item.get('text'),
+                author = item.get('author'),
+                tags = str(item.get('tags')),
+            )
+        )
+        self.cnx.commit()
+        return item
+    
+    def close_spider (self, spider):
+        self.cur.close()
+        self.cnx.close()

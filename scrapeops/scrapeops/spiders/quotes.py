@@ -1,5 +1,6 @@
 import scrapy
 from scrapeops.items import QuoteItem
+from scrapeops.secrets import MYSQL_HOST, MYSQL_PASSWORD, MYSQL_USERNAME
 
 
 class QuotesSpider(scrapy.Spider):
@@ -14,8 +15,13 @@ class QuotesSpider(scrapy.Spider):
 
     custom_settings = {
         'ITEM_PIPELINES' : {
-            'scrapeops.pipelines.SqlLitePipeline' : 100 # Saving items to sqlite3 DB
-        }
+            # 'scrapeops.pipelines.MySqlDemoPipeline': 100 
+            'scrapeops.pipelines.MySqlNoDuplicatesPipeline': 100 
+        },
+        'MYSQL_USERNAME' : MYSQL_USERNAME,
+        'MYSQL_PASSWORD' : MYSQL_PASSWORD,
+        'MYSQL_HOST' : MYSQL_HOST,
+        'MYSQL_DATABASE' : 'quotes'
     }
 
     def parse(self, response):
