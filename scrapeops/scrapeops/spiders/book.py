@@ -37,9 +37,19 @@ class BookSpider(scrapy.Spider):
                 'format' : 'jsonlines',
                 # 'batch_item_count' specifies the size of 1 file/ batch
                 'batch_item_count' : 10 # Starts recording data into a new file every 10 items
-            }
-        }
-    }
+            },
+        # =================================================================================================================
+        #     # Saving to amazon S3
+        #     # To perfom this save you need to have botocore installed and 
+        #     # Have your amazon credentials in scrapy.settings as "AWS_ACCESS_KEY_ID" and "AWS_SECRET_ACCESS_KEY"
+        #     "s3://scrapy-playbook/%()s/%()s_%()s.csv" :{
+        #         "format" : "csv"
+        #     }
+        # },
+        # "AWS_ACCESS_KEY_ID" : "AWS_ACCESS_KEY_ID",
+        # "AWS_SECRET_ACCESS_KEY" : "AWS_SECRET_ACCESS_KEY"
+        # =================================================================================================================
+    }}
 
     def parse(self, response):
         for book in response.css('article.product_pod'):
